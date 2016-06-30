@@ -1,0 +1,38 @@
+---
+刚开始的思路是利用CustomIOSAlertView弹屏，在里面添加textView,但发现键盘总是在屏幕下方弹出，并且将弹屏上移做不好，就退而求其次，用以下方法代替了：
+
+---
+#2016-06-29-键盘弹出屏幕上移
+
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    //开始编辑时触发，文本字段将成为first responder，
+    
+    
+    //键盘高度216
+    
+    //滑动效果（动画）
+    NSTimeInterval animationDuration = 0.30f;
+    [UIView beginAnimations:@ "ResizeForKeyboard"  context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    
+    //将视图的Y坐标向上移动，以使下面腾出地方用于软键盘的显示
+    self.view.frame = CGRectMake(0.0f, -100.0f, self.view.frame.size.width, self.view.frame.size.height); //64-216
+    
+    [UIView commitAnimations];
+    
+}
+
+#pragma mark -屏幕恢复
+-( void )textFieldDidEndEditing:(UITextField *)textField
+{
+    //滑动效果
+    NSTimeInterval animationDuration = 0.30f;
+    [UIView beginAnimations:@ "ResizeForKeyboard"  context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    
+    //恢复屏幕
+    self.view.frame = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height); //64-216
+    
+    [UIView commitAnimations];
+}
